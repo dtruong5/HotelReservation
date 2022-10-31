@@ -1,0 +1,1 @@
+Without a doubt, travel is a crash course in humility. As we cross borders, and oceans, we gain true perspective. We learn to recognise and be grateful for all of the things we take for granted in our own lives, and we also gain an appreciation and respect for how others live. Travel teaches us to be tolerant, flexible and open-minded, and most of all it makes us humble.

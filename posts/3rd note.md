@@ -1,0 +1,1 @@
+One thing you’ll never find on a suggested packing list is a diet. Leave it at home! Just make sure you bring a healthy appetite and a willingness to taste new flavours and sample all of the local delicacies. Remember, mimosas are totally acceptable at breakfast and dessert is always a good idea. Indulge, go back for seconds and exercise when you get home.
