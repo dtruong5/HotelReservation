@@ -1,32 +1,3 @@
-def checking_entry(data, users):
-    """
-        checking user's submission entry
-    """
-    test = checking_password(
-        data["password"],
-        data["password-verify"]
-    )["test"]
-    msg = checking_password(
-        data["password"],
-        data["password-verify"]
-    )["msg"]
-    if not test:
-        test = False
-    if not "@" in data["email"]:
-        test = False
-        msg = "Please enter a valid email address"
-    if data["username"] == "":
-        test = False
-        msg = "Please enter a username"
-    for user in users:
-        if user["username"].lower() == data["username"].lower():
-            test = False
-            msg = "that username is already taken"
-    return {
-        "test": test,
-        "msg": msg
-    }
-
 def checking_password(password, verify_password):
     """
         checking for password requirements
@@ -61,11 +32,36 @@ def checking_password(password, verify_password):
         test = False
         msg = "Password did not match"
 
-    with open("CommonPassword.txt", encoding="utf8") as file:
-        for word in file:
-            if password == word.strip().lower():
-                test = False
-                msg = "Please choose another password"
+    return {
+        "test": test,
+        "msg": msg
+    }
+
+
+def checking_entry(data, users):
+    """
+        checking user's submission entry
+    """
+    test = checking_password(
+        data["password"],
+        data["password-verify"]
+    )["test"]
+    msg = checking_password(
+        data["password"],
+        data["password-verify"]
+    )["msg"]
+    if not test:
+        test = False
+    if not "@" in data["email"]:
+        test = False
+        msg = "Please enter a valid email address"
+    if data["username"] == "":
+        test = False
+        msg = "Please enter a username"
+    for user in users:
+        if user["username"].lower() == data["username"].lower():
+            test = False
+            msg = "that username is already taken"
     return {
         "test": test,
         "msg": msg
