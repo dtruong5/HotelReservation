@@ -1,1 +1,0 @@
-Don’t just travel for travel’s sake. Travel to seek adventure and feel alive. Take part in authentic experiences that will not only change the way you see the world, but that will also encourage self-reflection, environmental awareness and global action to help protect and conserve our planet.

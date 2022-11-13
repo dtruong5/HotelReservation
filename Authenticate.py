@@ -108,7 +108,7 @@ class UpdateUserPassword(FlaskView):
 
 class Registration(FlaskView):
     default_methods = ['GET', 'POST']
-
+    @route('/register/')
     def registerUser(self):
         """verify user's input and register user to database"""
         msg = ""
@@ -176,7 +176,7 @@ class Gallery(FlaskView):
         )
 
 
-class LoggingInfo(FlaskView):
+class LoginInfo(FlaskView):
     default_methods = ["GET", "POST"]
 
     def comments(self):
@@ -271,7 +271,7 @@ class Reservation(FlaskView):
 LogUserIn.register(app, route_base='/')
 LogUserOut.register(app, route_base='/')
 Gallery.register(app, route_base='/')
-LoggingInfo.register(app, route_base='/')
+LoginInfo.register(app, route_base='/')
 Registration.register(app, route_base='/')
 Reservation.register(app, route_base='/')
 
