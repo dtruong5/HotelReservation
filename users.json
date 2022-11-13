@@ -10,6 +10,17 @@
             "username": "truongdat12",
             "password": "$5$rounds=535000$VqLhj9lLizk70cTv$oiNL779CfLz.S0Bdre39UXPSHBstHTfzicWt/wZvif.",
             "email": "bomplar@gmail.com"
+        },
+        {
+            "username": "sdawawga",
+            "password": "$5$rounds=535000$zBHAYRbY9NiUHU4B$GzwkXkXAuHd26HvUU7SiC3IWYo7eGof4MgdC9kWnyo1",
+            "email": "sdasio2@yahoo.com",
+            "attempts": [
+                {
+                    "date": "2022-11-13",
+                    "time": "04:33:20"
+                }
+            ]
         }
     ]
 }

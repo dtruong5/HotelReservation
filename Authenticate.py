@@ -63,9 +63,8 @@ class LogUserIn(FlaskView):
 
 
 class UpdateUserPassword(FlaskView):
-    default_methods = ["GET", "POST"]
-
-    def change_password(self):
+    @route('/update_password/', methods =['GET','POST'])
+    def update_password(self):
         """perform checking password and update into new password"""
         msg = ""
         if request.method == "POST":
@@ -100,15 +99,14 @@ class UpdateUserPassword(FlaskView):
                     verify_password
                 )["msg"]
         return render_template(
-            "update-password.html",
+            "update_password.html",
             logged_user=session,
             msg=msg
         )
 
 
 class Registration(FlaskView):
-    default_methods = ['GET', 'POST']
-    @route('/register/')
+    @route('/register/',methods = ['GET', 'POST'])
     def registerUser(self):
         """verify user's input and register user to database"""
         msg = ""
@@ -176,7 +174,7 @@ class Gallery(FlaskView):
         )
 
 
-class LoginInfo(FlaskView):
+class Receptionist(FlaskView):
     default_methods = ["GET", "POST"]
 
     def comments(self):
@@ -271,9 +269,10 @@ class Reservation(FlaskView):
 LogUserIn.register(app, route_base='/')
 LogUserOut.register(app, route_base='/')
 Gallery.register(app, route_base='/')
-LoginInfo.register(app, route_base='/')
+Receptionist.register(app, route_base='/')
 Registration.register(app, route_base='/')
 Reservation.register(app, route_base='/')
+UpdateUserPassword.register(app, route_base='/')
 
 if __name__ == "__main__":
     db.create_all()
