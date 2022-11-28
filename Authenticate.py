@@ -63,7 +63,7 @@ class LogUserIn(FlaskView):
 
 
 class UpdateUserPassword(FlaskView):
-    @route('/update_password/', methods =['GET','POST'])
+    @route('/update_password/', methods=['GET', 'POST'])
     def update_password(self):
         """perform checking password and update into new password"""
         msg = ""
@@ -106,7 +106,7 @@ class UpdateUserPassword(FlaskView):
 
 
 class Registration(FlaskView):
-    @route('/register/',methods = ['GET', 'POST'])
+    @route('/register/', methods=['GET', 'POST'])
     def registerUser(self):
         """verify user's input and register user to database"""
         msg = ""
@@ -201,7 +201,7 @@ class Receptionist(FlaskView):
         )
 
 
-class Todo(db.Model):
+class Init_db(db.Model):
     """ Initialize the database, and create our column model """
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(200), nullable=False)
@@ -213,11 +213,12 @@ class Todo(db.Model):
 
 class Reservation(FlaskView):
     default_methods = ["GET", "POST"]
+
     def task(self):
         """store the content from task manager to database"""
         if request.method == 'POST':
             task_content = request.form['content']
-            new_task = Todo(content=task_content)
+            new_task = Init_db(content=task_content)
 
             try:
                 db.session.add(new_task)
@@ -227,18 +228,17 @@ class Reservation(FlaskView):
                 return 'There was an issue adding your task'
 
         else:
-            tasks = Todo.query.order_by(Todo.date_created).all()
+            tasks = Init_db.query.order_by(Init_db.date_created).all()
             return render_template(
                 'index.html',
                 tasks=tasks,
                 logged_user=session
             )
 
-
     @route('/delete/<int:identification>')
     def delete(self, identification):
         """ provide the function to delete task from database """
-        task_to_delete = Todo.query.get_or_404(identification)
+        task_to_delete = Init_db.query.get_or_404(identification)
         try:
             db.session.delete(task_to_delete)
             db.session.commit()
@@ -246,11 +246,10 @@ class Reservation(FlaskView):
         except(RuntimeError, ValueError, NameError):
             return 'There was a problem deleting that task'
 
-
     @route('/update/<int:identification>', methods=['GET', 'POST'])
     def update(self, identification):
         """update the task that already exist in the database"""
-        task = Todo.query.get_or_404(identification)
+        task = Init_db.query.get_or_404(identification)
         if request.method == 'POST':
             task.content = request.form['content']
             try:
