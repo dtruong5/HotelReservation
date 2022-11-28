@@ -15,6 +15,18 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.secret_key = str(uuid.uuid4())
 db = SQLAlchemy(app)
 
+class ForgotPassword(FlaskView):
+    default_methods = ['GET','POST']
+    def ForgotPassword(self):
+        "Forgot password"
+        msg=""
+        if request.method == "POST":
+            with open("users.json", encoding="utf8") as file:
+                users = json.loads(file.read())
+                data = {
+                    "username": request.form.get("username"),
+                    "email": request.form.get("email")
+                }
 
 class LogUserOut(FlaskView):
     def logout(self):
