@@ -4,7 +4,16 @@
             "username": "dattruong",
             "password": "$5$rounds=535000$V6vHwpQFZWLQfbS9$qAoewB/lCM10D.YaumSUKuzN2bPku9X866TyzqLanR7",
             "email": "werqiso@gmail.com",
-            "attempts": []
+            "attempts": [
+                {
+                    "date": "2022-11-28",
+                    "time": "11:54:40"
+                },
+                {
+                    "date": "2022-12-01",
+                    "time": "03:48:13"
+                }
+            ]
         },
         {
             "username": "truongdat12",
@@ -34,6 +43,11 @@
         {
             "username": "asgjaoiwhjaoiww",
             "password": "$5$rounds=535000$keg/yF6UBFGUmrfX$BjVKL0xFLkjW3BiTpXwy1Yvfc/XQFr3VX5PuykByNDA",
+            "email": "daniel@gmail.com"
+        },
+        {
+            "username": "truongdat",
+            "password": "$5$rounds=535000$trA7dtPWErpQXk1K$OR07PK4YjoSRNvgrBtqmgx99Zj9uqYu/QbxTL3gApF3",
             "email": "daniel@gmail.com"
         }
     ]

@@ -6,6 +6,9 @@ from datetime import datetime
 import LogMonitor
 import ValidateEntries
 from flask import Flask, render_template, request, url_for, redirect, session
+from flask_wtf import FlaskForm
+from wtforms import validators, SubmitField
+from wtforms.fields import DateField
 from flask_classful import FlaskView, route
 from flask_sqlalchemy import SQLAlchemy
 from passlib.hash import sha256_crypt
@@ -15,18 +18,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.secret_key = str(uuid.uuid4())
 db = SQLAlchemy(app)
 
-class ForgotPassword(FlaskView):
-    default_methods = ['GET','POST']
-    def ForgotPassword(self):
-        "Forgot password"
-        msg=""
-        if request.method == "POST":
-            with open("users.json", encoding="utf8") as file:
-                users = json.loads(file.read())
-                data = {
-                    "username": request.form.get("username"),
-                    "email": request.form.get("email")
-                }
+class InfoForm(FlaskForm):
+    startdate = DateField('Start Date', format='%Y-%m-%d', validators=(validators.DataRequired(),))
+    enddate = DateField('End Date', format='%Y-%m-%d', validators=(validators.DataRequired(),))
+    submit = SubmitField('Submit')
 
 class LogUserOut(FlaskView):
     def logout(self):
@@ -216,9 +211,10 @@ class Receptionist(FlaskView):
 class Init_db(db.Model):
     """ Initialize the database, and create our column model """
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(200), nullable=False)
-    date_created = db.Column(db.DateTime, default=datetime.utcnow)
-
+    num_of_adult = db.Column(db.Integer, nullable=False)
+    check_in_date = db.Column(db.String(200), nullable=False)
+    check_out_date = db.Column(db.String(200), nullable=False)
+    room = db.Column(db.String(200), nullable=False)
     def __repr__(self):
         return f'<Task {self.id}>'
 
@@ -228,21 +224,22 @@ class Reservation(FlaskView):
 
     def task(self):
         """store the content from task manager to database"""
+        form = InfoForm()
         if request.method == 'POST':
-            task_content = request.form['content']
-            new_task = Init_db(content=task_content)
-
+            new_task = Init_db(num_of_adult=request.form.get('number_of_guests'), check_in_date=form.startdate.data, check_out_date=form.enddate.data,
+                               room=request.form.get('room'))
             try:
                 db.session.add(new_task)
                 db.session.commit()
+
                 return redirect('/task')
             except(RuntimeError, ValueError, NameError):
                 return 'There was an issue adding your task'
-
         else:
-            tasks = Init_db.query.order_by(Init_db.date_created).all()
+            tasks = Init_db.query.order_by(Init_db.check_out_date).all()
             return render_template(
                 'index.html',
+                form=form,
                 tasks=tasks,
                 logged_user=session
             )
@@ -275,6 +272,12 @@ class Reservation(FlaskView):
                 task=task,
                 logged_user=session
             )
+@app.route('/date', methods=['GET', 'POST'])
+def date():
+    startdate = session['startdate']
+    enddate = session['enddate']
+    return render_template('date.html')
+
 
 
 LogUserIn.register(app, route_base='/')
@@ -286,5 +289,6 @@ Reservation.register(app, route_base='/')
 UpdateUserPassword.register(app, route_base='/')
 
 if __name__ == "__main__":
+    db.drop_all()
     db.create_all()
     app.run()

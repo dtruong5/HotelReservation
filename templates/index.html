@@ -6,20 +6,22 @@
 
 {% block body %}
 <div class="content">
-    <h1 style="text-align: center">Task Manager</h1>
-    {% if tasks|length < 1 %}
-    <h4 style="text-align: center">There are no tasks. Create one below!</h4>
-    {% else %}
-    <table style="text-align: center">
-        <tr style="text-align: center">
-            <th border = "1">Task</th>
-            <th>Added</th>
+    <h1>Reservation Date</h1>
+    <table>
+        <tr>
+            <th>Number of Guests</th>
+            <th>Check in Date</th>
+            <th>Check out Date</th>
+            <th>Type of Room</th>
             <th>Actions</th>
         </tr>
         {% for task in tasks %}
             <tr>
-                <td>{{ task.content }}</td>
-                <td>{{ task.date_created.date() }}</td>
+                <td>{{ task.num_of_adult }}</td>
+                <td>{{ task.check_in_date }}</td>
+                <td>{{ task.check_out_date }}</td>
+                <td>{{ task.room }}</td>
+
                 <td>
                     <a href="/delete/{{task.id}}">Delete</a>
                     <br>
@@ -28,13 +30,30 @@
             </tr>
         {% endfor %}
     </table>
-    {% endif %}
+<div class="form", style="text-align: center">
+<form action="" method='POST' name="myform">
+    <label for="number_of_guests">Choose number of guests:</label>
+    <select name="number_of_guests", id="number_of_guests">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    </select>
+    {{ form.csrt_token }}
+    {{ form.startdate.label }} {{form.startdate(class='datepicker')}} {{form.hidden_tag()}}
+    {{ form.enddate.label }} {{form.enddate(class='datepicker')}} {{form.hidden_tag()}}
+     <label for="room">Choose type of room:</label>
+    <select name="room", id="room">
+    <option value="King">King</option>
+    <option value="Double Queen">Double Queen</option>
+    <option value="Suite">Suite</option>
 
-    <div class="form", style="text-align: center">
-        <form action="/task" method="POST">
-            <input type="text" name="content" id="content">
-            <input type="submit" value="Add Task">
-        </form>
-    </div>
+    </select>
+    <p>
+    {{form.submit()}}
+    </p>
+</form>
+</div>
+</dib>
 </div>
 {% endblock %}
