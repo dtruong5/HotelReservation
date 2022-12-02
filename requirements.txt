@@ -1,0 +1,8 @@
+flask==2.1.2
+flask-classful==0.14.2
+flask-sqlalchemy==2.5.1
+sqlalchemy==1.4.44
+werkzeug==2.1.2
+wtforms==3.0.1
+flask_wtf==1.0.1
+
