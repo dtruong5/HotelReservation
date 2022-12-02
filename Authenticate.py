@@ -18,10 +18,14 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.secret_key = str(uuid.uuid4())
 db = SQLAlchemy(app)
 
+
 class InfoForm(FlaskForm):
-    startdate = DateField('Start Date', format='%Y-%m-%d', validators=(validators.DataRequired(),))
-    enddate = DateField('End Date', format='%Y-%m-%d', validators=(validators.DataRequired(),))
+    startdate = DateField('Start Date', format='%Y-%m-%d',
+                          validators=(validators.DataRequired(),))
+    enddate = DateField('End Date', format='%Y-%m-%d',
+                        validators=(validators.DataRequired(),))
     submit = SubmitField('Submit')
+
 
 class LogUserOut(FlaskView):
     def logout(self):
@@ -49,7 +53,8 @@ class LogUserIn(FlaskView):
                 "password": request.form.get("password")
             }
             for user in users["users"]:
-                user_matching = data["username"].lower() == user["username"].lower()
+                user_matching = data["username"].lower(
+                ) == user["username"].lower()
                 password_match = sha256_crypt.verify(
                     data["password"],
                     user["password"]
@@ -58,7 +63,7 @@ class LogUserIn(FlaskView):
                     session["username"] = user["username"]
                     session["hash"] = user["password"]
                     session["logged"] = True
-                    return redirect(url_for("Gallery:note"))
+                    return redirect(url_for("Gallery:show_rooms"))
             msg = "Incorrect username or password, please try again"
             LogMonitor.logger(data["username"])
 
@@ -127,7 +132,8 @@ class Registration(FlaskView):
                 "password-verify": request.form.get("password-verify"),
                 "email": request.form.get("email")
             }
-            test = ValidateEntries.checking_entry(new_user, users["users"])["test"]
+            test = ValidateEntries.checking_entry(
+                new_user, users["users"])["test"]
             if test:
                 users["users"].append(new_user)
                 new_user["password"] = sha256_crypt.hash(
@@ -139,7 +145,8 @@ class Registration(FlaskView):
                     outfile.write(user_object)
                 return redirect(url_for("LogUserIn:login"))
             if not test:
-                msg = ValidateEntries.checking_entry(new_user, users["users"])["msg"]
+                msg = ValidateEntries.checking_entry(
+                    new_user, users["users"])["msg"]
 
         return render_template(
             "register.html",
@@ -166,6 +173,7 @@ class Gallery(FlaskView):
             'gallery.html',
             logged_user=session
         )
+
 
 class Receptionist(FlaskView):
     default_methods = ["GET", "POST"]
@@ -201,6 +209,7 @@ class Init_db(db.Model):
     check_in_date = db.Column(db.String(200), nullable=False)
     check_out_date = db.Column(db.String(200), nullable=False)
     room = db.Column(db.String(200), nullable=False)
+
     def __repr__(self):
         return f'<Task {self.id}>'
 
@@ -219,7 +228,7 @@ class Reservation(FlaskView):
                 db.session.commit()
 
                 return redirect('/task')
-            except(RuntimeError, ValueError, NameError):
+            except (RuntimeError, ValueError, NameError):
                 return 'There was an issue adding your task'
         else:
             tasks = Init_db.query.order_by(Init_db.check_out_date).all()
@@ -238,7 +247,7 @@ class Reservation(FlaskView):
             db.session.delete(task_to_delete)
             db.session.commit()
             return redirect('/task')
-        except(RuntimeError, ValueError, NameError):
+        except (RuntimeError, ValueError, NameError):
             return 'There was a problem deleting that task'
 
     @route('/update/<int:identification>', methods=['GET', 'POST'])
@@ -250,7 +259,7 @@ class Reservation(FlaskView):
             try:
                 db.session.commit()
                 return redirect('/task')
-            except(RuntimeError, ValueError, NameError):
+            except (RuntimeError, ValueError, NameError):
                 return 'There was an issue updating your task'
         else:
             return render_template(
@@ -258,12 +267,13 @@ class Reservation(FlaskView):
                 task=task,
                 logged_user=session
             )
+
+
 @app.route('/date', methods=['GET', 'POST'])
 def date():
     startdate = session['startdate']
     enddate = session['enddate']
     return render_template('date.html')
-
 
 
 LogUserIn.register(app, route_base='/')
