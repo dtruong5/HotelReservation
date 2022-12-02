@@ -1,2 +1,5 @@
 __pycache__
 users.json
+.DS_Store
+.idea
+test.db
