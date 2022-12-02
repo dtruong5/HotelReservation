@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Hotel Gallery</title>
+{% endblock %}
+
+{% block body %}
+<div style="overflow-x: auto;" class="hotel_gallery">
+    <table class="center">
+        <tr>
+           <th class="table_header" colspan="3"><h1>ROOMS</h1></th>
+        </tr>
+
+        <tr>
+          <td><img src="{{ url_for('static', filename='img/king.png')}}" class="gallery_img" alt="King Room">
+          <td><img src="{{ url_for('static', filename='img/double_queen.png')}}" class="gallery_img" alt="Double Queen Room">
+          <td><img src="{{ url_for('static', filename='img/suite.png')}}" class="gallery_img" alt="Suite">
+        </tr>
+
+        <tr>
+          <td style="text-align: center; vertical-align: middle;">
+             KING</td>
+          <td style="text-align: center; vertical-align: middle;">
+             DOUBLE QUEEN</td>
+          <td style="text-align: center; vertical-align: middle;">
+             EXECUTIVE SUITE</td>
+         </tr>
+    </table>
+</div>
+{% endblock %}
