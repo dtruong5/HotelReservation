@@ -159,27 +159,13 @@ def home():
 
 
 class Gallery(FlaskView):
-    def note(self):
-        """Get the content from post and displaying them on route /note"""
-        titles = os.listdir('./posts')
-        posts = []
-
-        for title in titles:
-            with open('./posts/' + title, encoding="utf8") as file:
-                file_contents = file.read()
-                posts.append({
-                    'title': title,
-                    'content': file_contents
-                })
-
-        posts.reverse()
+    def show_rooms(self):
+        """ show images of rooms in a table """
 
         return render_template(
-            'note.html',
-            posts=posts,
+            'gallery.html',
             logged_user=session
         )
-
 
 class Receptionist(FlaskView):
     default_methods = ["GET", "POST"]
