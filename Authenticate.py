@@ -178,26 +178,26 @@ class Gallery(FlaskView):
 class Receptionist(FlaskView):
     default_methods = ["GET", "POST"]
 
-    def comments(self):
-        """gets content from comments.json"""
+    def bookings(self):
+        """gets content from bookings.json"""
 
-        with open('comments.json', encoding="utf8") as file:
+        with open('bookings.json', encoding="utf8") as file:
             string = json.loads(file.read())
 
         if request.method == 'POST':
-            string['comments'].append({
+            string['bookings'].append({
                 "name": request.form.get("name"),
                 "message": request.form.get("message"),
                 "date": datetime.now().strftime("%B %d, %Y - %H:%M")
             })
 
             json_object = json.dumps(string, indent=4)
-            with open("comments.json", "w", encoding="utf8") as outfile:
+            with open("bookings.json", "w", encoding="utf8") as outfile:
                 outfile.write(json_object)
 
         return render_template(
-            'comments.html',
-            comments=string['comments'],
+            'bookings.html',
+            bookings=string['bookings'],
             logged_user=session
         )
 
