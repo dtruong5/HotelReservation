@@ -88,7 +88,8 @@ class UpdateUserPassword(FlaskView):
             password_validated = ValidateEntries.checking_password(
                 new_password,
                 verify_password
-            )["test"]
+            )
+            ["test"]
             pass_correct = sha256_crypt.verify(
                 current_password,
                 session["hash"]
@@ -121,8 +122,8 @@ class Registration(FlaskView):
     @route('/register/', methods=['GET', 'POST'])
     def registerUser(self):
         """verify user's input and register user to database"""
-        msg = ""
-        test = True
+        user_validated = False
+        msg = ''
         if request.method == "POST":
             with open("users.json", encoding="utf8") as file:
                 users = json.loads(file.read())
@@ -132,9 +133,11 @@ class Registration(FlaskView):
                 "password-verify": request.form.get("password-verify"),
                 "email": request.form.get("email")
             }
-            test = ValidateEntries.checking_entry(
-                new_user, users["users"])["test"]
-            if test:
+            validate_user = ValidateEntries.checking_entry(new_user, users)
+            user_validated = validate_user['valid-user']
+            msg = validate_user['msg']
+
+            if user_validated:
                 users["users"].append(new_user)
                 new_user["password"] = sha256_crypt.hash(
                     new_user["password"]
@@ -144,13 +147,11 @@ class Registration(FlaskView):
                 with open("users.json", "w", encoding="utf8") as outfile:
                     outfile.write(user_object)
                 return redirect(url_for("LogUserIn:login"))
-            if not test:
-                msg = ValidateEntries.checking_entry(
-                    new_user, users["users"])["msg"]
-
+            if not user_validated:
+                user_validated = user_validated
         return render_template(
             "register.html",
-            test=test,
+            user_validated=user_validated,
             logged_user=session,
             msg=msg
         )
@@ -175,7 +176,7 @@ class Gallery(FlaskView):
         )
 
 
-class Receptionist(FlaskView):
+class Receptionist(FlaskView):  # Bookings Tab
     default_methods = ["GET", "POST"]
 
     def bookings(self):

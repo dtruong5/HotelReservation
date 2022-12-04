@@ -1,68 +1,66 @@
+import re
+import json
+
+
 def checking_password(password, verify_password):
     """
         checking for password requirements
     """
-    test = True
+    valid_pwd = False
     msg = ""
-    count = 0
-    for char in password:
-        if char in "[@_!#$%^&*()<>?/|}{~:=]":
-            count = count + 1
-            print(password)
-            print(count)
-    if count == 0:
-        test = False
-        msg = "Passwords need at least one special character"
-        print(password)
-        print(count)
-    if len(password) < 12:
-        test = False
-        msg = "Passwords need at least 12 characters"
 
-    if not any(char.isdigit() for char in password):
-        test = False
-        msg = "Passwords need at least one number"
-    if not any(char.isupper() for char in password):
-        test = False
-        msg = "Password need at least one upper character"
-    if not any(char.islower() for char in password):
-        test = False
-        msg = "Password need at least one lower character"
-    if not password == verify_password:
-        test = False
-        msg = "Password did not match"
+    password_pattern = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
+    if password == verify_password:
+        if re.match(password_pattern, verify_password):
+            msg = 'Passwords meet requirements.'
+            valid_pwd = True
+        else:
+            msg = 'Password requirements: 8 characters long,1 uppercase,1 lowercase, 1 digit,and 1 special character(ie: !@#$)'
+            valid_pwd = False
+    if password != verify_password:
+        msg = 'The passwords do not match.'
+        valid_pwd = False
 
     return {
-        "test": test,
+        "valid_pwd": valid_pwd,
         "msg": msg
     }
 
 
 def checking_entry(data, users):
     """
-        checking user's submission entry
+        Check if user has valid password
+        check if username and email are taken
+        #data holds submitted data
+        #users is all users in json file
     """
-    test = checking_password(
-        data["password"],
-        data["password-verify"]
-    )["test"]
-    msg = checking_password(
-        data["password"],
-        data["password-verify"]
-    )["msg"]
-    if not test:
-        test = False
-    if not "@" in data["email"]:
-        test = False
-        msg = "Please enter a valid email address"
-    if data["username"] == "":
-        test = False
-        msg = "Please enter a username"
-    for user in users:
-        if user["username"].lower() == data["username"].lower():
-            test = False
-            msg = "that username is already taken"
-    return {
-        "test": test,
-        "msg": msg
-    }
+    # user is invalid by default
+    valid_user = False
+
+    valid_pwd = checking_password(data["password"], data["password-verify"])
+    val_pwd_result = valid_pwd['valid_pwd']
+
+    uname = data['username']
+    email = data['email']
+    msg = ''
+    if val_pwd_result:
+        for user in users['users']:
+            if uname == user['username']:
+                valid_user = False
+                msg = 'This username is taken'
+                break
+            if email == user['email']:
+                valid_user = False
+                msg = 'This email is taken'
+                break
+            if not email or not uname:
+                valid_user = False
+                msg = 'username and email are required'
+                break
+            if uname != user['username'] and email != user['email']:
+                valid_user = True
+                msg = ''
+        return {"valid-user": valid_user, "msg": msg}
+
+    if not val_pwd_result:
+        return {"valid-user": valid_pwd['valid_pwd'], "msg": valid_pwd['msg']}

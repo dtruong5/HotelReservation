@@ -1,47 +1,34 @@
 {% extends 'base.html' %}
 
 {% block head %}
-    <title>register</title>
+<title>register</title>
 {% endblock %}
 
 {% block body %}
-    <div class="container register-container">
-        {% if test is false %}
-            <h5>Invalid input, please try again</h5>
-        {% endif  %}
-        <form  method="POST">
-            <div class="mb-2">
-                <label for="username" class="form-label">Username</label>
-                <input 
-                    type="text"
-                    class="form-control"
-                    id="username"
-                    name="username"
-                >
-                <label for="email" class="form-label">Email</label>
-                <input 
-                    type="text"
-                    class="form-control"
-                    id="email"
-                    name="email"
-                >
-                <label for="password" class="form-label">Password</label>
-                <input 
-                    type="text"
-                    class="form-control"
-                    id="password"
-                    name="password"
-                >
-                <label for="password" class="form-label">Enter Password Again</label>
-                <input 
-                    type="text"
-                    class="form-control"
-                    id="password-verify"
-                    name="password-verify"
-                >
-            </div>
+<div class="container register-container">
+    {% if test is false %}
+    <h5>Invalid input, please try again</h5>
+    {% endif  %}
+    <form method="POST">
+        <div class="mb-2">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="johndoe1">
 
-            <button  type="submit" class="btn btn-primary">Create Account</button>
-        </form>
+            <label for="email">Email</label>
+            <input type="text" class="form-control" id="email" name="email" placeholder="email@example.com">
+
+            <label for="password">Password</label>
+            <input type="password" class="form-control" class="visually-hidden" id="password" name="password" placeholder="***" required>
+
+            <label for="password">Re-enter Password</label>
+            <input type="password" class="form-control" class="visually-hidden" id="password-verify" name="password-verify" placeholder="***" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Account</button>
+    </form>
+    <div class="msg">
+        <span>{{msg}}</span>
     </div>
+
+</div>
 {% endblock %}
