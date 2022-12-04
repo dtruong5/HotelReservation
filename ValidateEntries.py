@@ -1,5 +1,4 @@
 import re
-import json
 
 
 def checking_password(password, verify_password):
