@@ -2,6 +2,11 @@ a {
     text-decoration: none;
 }
 
+.msg {
+    color: red;
+    margin-top: 20px;
+}
+
 .carousel-item {
 
     width: 100%;
@@ -143,7 +148,7 @@ table.center {
     margin-right: auto;
 }
 
-td img{
+td img {
     display: block;
     margin-left: auto;
     margin-right: auto;
