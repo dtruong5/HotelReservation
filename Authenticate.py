@@ -253,10 +253,14 @@ class Reservation(FlaskView):
 
     @route('/update/<int:identification>', methods=['GET', 'POST'])
     def update(self, identification):
+        form = InfoForm
         """update the task that already exist in the database"""
         task = Init_db.query.get_or_404(identification)
         if request.method == 'POST':
-            task.content = request.form['content']
+            task.num_of_adult = request.form.get('num_of_adult')
+            task.check_in_date = request.form.get('check_in_date')
+            task.check_out_date = request.form.get('check_out_date')
+            task.room = request.form.get('room')
             try:
                 db.session.commit()
                 return redirect('/task')
@@ -265,16 +269,11 @@ class Reservation(FlaskView):
         else:
             return render_template(
                 'update.html',
+                form=form,
                 task=task,
                 logged_user=session
             )
 
-
-@app.route('/date', methods=['GET', 'POST'])
-def date():
-    startdate = session['startdate']
-    enddate = session['enddate']
-    return render_template('date.html')
 
 
 LogUserIn.register(app, route_base='/')

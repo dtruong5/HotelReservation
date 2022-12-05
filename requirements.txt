@@ -6,3 +6,5 @@ werkzeug==2.1.2
 wtforms==3.0.1
 flask_wtf==1.0.1
 
+
+passlib~=1.7.4
