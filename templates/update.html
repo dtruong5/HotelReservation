@@ -9,8 +9,20 @@
     <h1 style="text-align: center">Update Task</h1>
     <div class="form">
         <form action="/update/{{task.id}}" method="POST">
-            <input type="text" name="content" id="content" value="{{task.content}}">
-            <input type="submit" value="Update">
+                <select name="num_of_adult" id="num_of_adult">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                </select>
+                <input type="date" name="check_in_date" id="check_in_date" value="{{task.check_in_date}}">
+                <input type="date" name="check_out_date" id="check_out_date" value="{{task.check_out_date}}">
+                <select name="room" id="room">
+                <option value="King">King</option>
+                <option value="Double Queen">Double Queen</option>
+                <option value="Suite">Suite</option>
+                </select>
+                <input type="submit" value="Update">
         </form>
     </div>
 </div>
