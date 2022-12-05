@@ -228,7 +228,7 @@ class Reservation(FlaskView):
                 db.session.add(new_task)
                 db.session.commit()
 
-                return redirect('/task')
+                return redirect('/reservation')
             except (RuntimeError, ValueError, NameError):
                 return 'There was an issue adding your task'
         else:
@@ -247,7 +247,7 @@ class Reservation(FlaskView):
         try:
             db.session.delete(task_to_delete)
             db.session.commit()
-            return redirect('/task')
+            return redirect('/reservation')
         except (RuntimeError, ValueError, NameError):
             return 'There was a problem deleting that task'
 
@@ -263,7 +263,7 @@ class Reservation(FlaskView):
             task.room = request.form.get('room')
             try:
                 db.session.commit()
-                return redirect('/task')
+                return redirect('/reservation')
             except (RuntimeError, ValueError, NameError):
                 return 'There was an issue updating your task'
         else:
