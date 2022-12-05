@@ -14,9 +14,27 @@ from flask_sqlalchemy import SQLAlchemy
 from passlib.hash import sha256_crypt
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hotel.db'
 app.secret_key = str(uuid.uuid4())
 db = SQLAlchemy(app)
+
+class Hotel(db.Model):
+    """ initialize the database, and create our column model """
+    id = db.Column(db.Integer, primary_key=True)
+    num_of_adult = db.Column(db.Integer, nullable=False)
+    check_in_date = db.Column(db.String(200), nullable=False)
+    check_out_date = db.Column(db.String(200), nullable=False)
+    room = db.Column(db.String(200), nullable=False)
+
+    def __init__(self, num_of_adult, check_in_date, check_out_date):
+        self.num = num_of_adult
+        self.check_in_date = check_in_date
+        self.check_out_date = check_out_date
+        self.room = room
+
+    def __repr__(self):
+        return f'<Hotel {self.id}>'
+
 
 
 class InfoForm(FlaskForm):
@@ -203,18 +221,6 @@ class Receptionist(FlaskView):  # Bookings Tab
         )
 
 
-class Init_db(db.Model):
-    """ Initialize the database, and create our column model """
-    id = db.Column(db.Integer, primary_key=True)
-    num_of_adult = db.Column(db.Integer, nullable=False)
-    check_in_date = db.Column(db.String(200), nullable=False)
-    check_out_date = db.Column(db.String(200), nullable=False)
-    room = db.Column(db.String(200), nullable=False)
-
-    def __repr__(self):
-        return f'<Task {self.id}>'
-
-
 class Reservation(FlaskView):
     default_methods = ["GET", "POST"]
 
@@ -222,7 +228,7 @@ class Reservation(FlaskView):
         """store the content from task manager to database"""
         form = InfoForm()
         if request.method == 'POST':
-            new_task = Init_db(num_of_adult=request.form.get('number_of_guests'), check_in_date=form.startdate.data, check_out_date=form.enddate.data,
+            new_task = Hotel(num_of_adult=request.form.get('number_of_guests'), check_in_date=form.startdate.data, check_out_date=form.enddate.data,
                                room=request.form.get('room'))
             try:
                 db.session.add(new_task)
@@ -232,7 +238,7 @@ class Reservation(FlaskView):
             except (RuntimeError, ValueError, NameError):
                 return 'There was an issue adding your task'
         else:
-            tasks = Init_db.query.order_by(Init_db.check_out_date).all()
+            tasks = Hotel.query.order_by(Hotel.check_out_date).all()
             return render_template(
                 'index.html',
                 form=form,
@@ -243,7 +249,7 @@ class Reservation(FlaskView):
     @route('/delete/<int:identification>')
     def delete(self, identification):
         """ provide the function to delete task from database """
-        task_to_delete = Init_db.query.get_or_404(identification)
+        task_to_delete = Hotel.query.get_or_404(identification)
         try:
             db.session.delete(task_to_delete)
             db.session.commit()
@@ -255,7 +261,7 @@ class Reservation(FlaskView):
     def update(self, identification):
         form = InfoForm
         """update the task that already exist in the database"""
-        task = Init_db.query.get_or_404(identification)
+        task = Hotel.query.get_or_404(identification)
         if request.method == 'POST':
             task.num_of_adult = request.form.get('num_of_adult')
             task.check_in_date = request.form.get('check_in_date')
@@ -284,7 +290,9 @@ Registration.register(app, route_base='/')
 Reservation.register(app, route_base='/')
 UpdateUserPassword.register(app, route_base='/')
 
-if __name__ == "__main__":
-    db.drop_all()
+
+with app.app_context():
     db.create_all()
-    app.run()
+
+if __name__ == "__main__":
+    app.run(debug = True)
