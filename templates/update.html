@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Task Master</title>
+<title>Update Reservation</title>
 {% endblock %}
 
 {% block body %}
-<div class="content">
-    <h1 style="text-align: center">Update Task</h1>
+<div>
+    <h1>Update Task</h1>
     <div class="form">
         <form action="/update/{{task.id}}" method="POST">
                 <select name="num_of_adult" id="num_of_adult">

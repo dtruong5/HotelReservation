@@ -218,7 +218,7 @@ class Init_db(db.Model):
 class Reservation(FlaskView):
     default_methods = ["GET", "POST"]
 
-    def task(self):
+    def reservation(self):
         """store the content from task manager to database"""
         form = InfoForm()
         if request.method == 'POST':

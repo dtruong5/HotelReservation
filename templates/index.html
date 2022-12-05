@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-<div class="content">
+<div>
     <h1>Reservation Date</h1>
     <table>
         <tr>
@@ -21,7 +21,6 @@
                 <td>{{ task.check_in_date }}</td>
                 <td>{{ task.check_out_date }}</td>
                 <td>{{ task.room }}</td>
-
                 <td>
                     <a href="/delete/{{task.id}}">Delete</a>
                     <br>
@@ -30,7 +29,7 @@
             </tr>
         {% endfor %}
     </table>
-<div class="form", style="text-align: center">
+<div class="form">
 <form action="" method='POST' name="myform">
     <label for="number_of_guests">Choose number of guests:</label>
     <select name="number_of_guests", id="number_of_guests">
@@ -55,11 +54,5 @@
 </form>
 </div>
 </dib>
-   <!--<div class="form", style="text-align: center">
-        <form action="/task" method="POST">
-            <input type="text" name="content" id="content">
-            <input type="submit" value="Add Task">
-        </form>
-   </div>-->
 </div>
 {% endblock %}
