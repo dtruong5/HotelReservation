@@ -26,8 +26,8 @@ class Hotel(db.Model):
     check_out_date = db.Column(db.String(200), nullable=False)
     room = db.Column(db.String(200), nullable=False)
 
-    def __init__(self, num_of_adult, check_in_date, check_out_date):
-        self.num = num_of_adult
+    def __init__(self, num_of_adult, check_in_date, check_out_date, room):
+        self.num_of_adult = num_of_adult
         self.check_in_date = check_in_date
         self.check_out_date = check_out_date
         self.room = room
