@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import json
 import os
 import uuid
@@ -12,11 +14,13 @@ from wtforms.fields import DateField
 from flask_classful import FlaskView, route
 from flask_sqlalchemy import SQLAlchemy
 from passlib.hash import sha256_crypt
+from waitress import serve
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hotel.db'
 app.secret_key = str(uuid.uuid4())
 db = SQLAlchemy(app)
+PORT=8080
 
 class Hotel(db.Model):
     """ initialize the database, and create our column model """
@@ -295,4 +299,5 @@ with app.app_context():
     db.create_all()
 
 if __name__ == "__main__":
-    app.run(debug = True)
+    #app.run(debug = True)
+    serve(app, host='0.0.0.0', port=PORT)
