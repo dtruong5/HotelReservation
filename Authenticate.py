@@ -146,6 +146,7 @@ class Registration(FlaskView):
         """verify user's input and register user to database"""
         user_validated = False
         msg = ''
+
         if request.method == "POST":
             with open("users.json", encoding="utf8") as file:
                 users = json.loads(file.read())
