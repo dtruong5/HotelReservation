@@ -15,13 +15,17 @@ from flask_classful import FlaskView, route
 from flask_sqlalchemy import SQLAlchemy
 from passlib.hash import sha256_crypt
 from waitress import serve
+import string
+import random
+import time
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hotel.db'
 app.secret_key = str(uuid.uuid4())
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-PORT=8080
+PORT = 8080
+
 
 class Hotel(db.Model):
     """ initialize the database, and create our column model """
@@ -39,7 +43,6 @@ class Hotel(db.Model):
 
     def __repr__(self):
         return f'<Hotel {self.id}>'
-
 
 
 class InfoForm(FlaskForm):
@@ -98,46 +101,97 @@ class LogUserIn(FlaskView):
 
 
 class UpdateUserPassword(FlaskView):
+    global email
+    global sent_code
+    email = ''
+    sent_code = ''
+
     @route('/update_password/', methods=['GET', 'POST'])
     def update_password(self):
         """perform checking password and update into new password"""
-        msg = ""
-        if request.method == "POST":
-            with open("users.json") as file:
-                users = json.loads(file.read())
-                current_password = request.form.get("current-password")
-            new_password = request.form.get("new-password")
-            verify_password = request.form.get("verify-password")
-            password_validated = ValidateEntries.checking_password(
-                new_password,
-                verify_password
-            )
-            ["test"]
-            pass_correct = sha256_crypt.verify(
-                current_password,
-                session["hash"]
-            )
-            if password_validated and pass_correct:
-                new_password = sha256_crypt.hash(
-                    new_password
-                )
-                session["hash"] = new_password
+        self.startstart = 0.0
+        self.stop = 0.0
 
-                for user in users["users"]:
-                    if user["username"] == session["username"]:
-                        user["password"] = new_password
-                json_object = json.dumps(users, indent=4)
-                with open("users.json", "w", encoding="utf8") as outfile:
-                    outfile.write(json_object)
-            else:
-                msg = ValidateEntries.checking_password(
-                    new_password,
-                    verify_password
-                )["msg"]
+        sent_em = False
+        msg = ""
+        errmsg = ''
+        resetmsg = ''
+
+        if request.method == "POST":
+            if "form1" in request.form:
+                email1 = request.form.get("email")
+
+                with open("users.json", encoding="utf8") as file:
+                    users = json.loads(file.read())
+                    found = False
+                    for user in users["users"]:
+                        if user['email'] == email1:
+                            found = True
+                    if found:
+                        sent_em = True
+                        # generating random strings
+                        N = 7
+                        res = ''.join(random.choices(
+                            string.ascii_uppercase + string.digits, k=N))
+                        global sent_code
+                        sent_code = res
+                        global email
+                        email = email1
+                    if not found:
+                        return ('Email not found. Please refresh the page and again.')
+
+            if "form2" in request.form:
+                stop = time.perf_counter()
+                self.stop = stop
+                elapsedtime = (self.start-self.stop)
+
+                if elapsedtime > -30.0:
+                    ver_code = request.form.get("verification-code")
+                    new_password = request.form.get("new-password")
+                    verify_password = request.form.get("verify-password")
+
+                    if ver_code == sent_code:
+                        validpwd = ValidateEntries.checking_password(
+                            new_password, verify_password)
+
+                        if validpwd["valid_pwd"] == True:
+                            new_pass = sha256_crypt.hash(verify_password)
+                            f = open('users.json',)
+                            data = json.load(f)
+
+                            for user in data["users"]:
+                                if user["email"] == email:
+                                    user.update({'password': new_pass})
+                            data = json.dumps(data, indent=4)
+                            with open("users.json", "w", encoding="utf8") as outfile:
+                                outfile.write(data)
+                                f.close()
+                                outfile.close()
+                            return redirect(url_for("LogUserIn:login"))
+
+                        if validpwd["valid_pwd"] == False:
+                            resetmsg = validpwd['msg']
+                            sent_em = True
+                    if ver_code != sent_code:
+                        return "The verication code does not match. Please refresh the page and try again."
+
+                if elapsedtime < -30.0:
+                    print('1')
+                    errmsg = "You must enter the code with 60 seconds. Please try again."
+                    errmsg = errmsg
+
+            if sent_em == True:
+                print('email sent')
+                self.start = time.perf_counter()
+
         return render_template(
             "update_password.html",
             logged_user=session,
-            msg=msg
+            msg=msg,
+            sent_em=sent_em,
+            sent_code=sent_code,
+            errmsg=errmsg,
+            resetmsg=resetmsg
         )
 
 
@@ -235,7 +289,7 @@ class Reservation(FlaskView):
         form = InfoForm()
         if request.method == 'POST':
             new_task = Hotel(num_of_adult=request.form.get('number_of_guests'), check_in_date=form.startdate.data, check_out_date=form.enddate.data,
-                               room=request.form.get('room'))
+                             room=request.form.get('room'))
             try:
                 db.session.add(new_task)
                 db.session.commit()
@@ -285,7 +339,6 @@ class Reservation(FlaskView):
                 task=task,
                 logged_user=session
             )
-
 
 
 LogUserIn.register(app, route_base='/')
