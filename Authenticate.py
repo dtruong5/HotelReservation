@@ -19,6 +19,7 @@ from waitress import serve
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hotel.db'
 app.secret_key = str(uuid.uuid4())
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 PORT=8080
 
