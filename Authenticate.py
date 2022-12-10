@@ -15,13 +15,17 @@ from flask_classful import FlaskView, route
 from flask_sqlalchemy import SQLAlchemy
 from passlib.hash import sha256_crypt
 from waitress import serve
+import string
+import random
+import time
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hotel.db'
 app.secret_key = str(uuid.uuid4())
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-PORT=8080
+PORT = 8080
+
 
 class Hotel(db.Model):
     """ initialize the database, and create our column model """
@@ -39,7 +43,6 @@ class Hotel(db.Model):
 
     def __repr__(self):
         return f'<Hotel {self.id}>'
-
 
 
 class InfoForm(FlaskForm):
@@ -235,7 +238,7 @@ class Reservation(FlaskView):
         form = InfoForm()
         if request.method == 'POST':
             new_task = Hotel(num_of_adult=request.form.get('number_of_guests'), check_in_date=form.startdate.data, check_out_date=form.enddate.data,
-                               room=request.form.get('room'))
+                             room=request.form.get('room'))
             try:
                 db.session.add(new_task)
                 db.session.commit()
@@ -285,7 +288,6 @@ class Reservation(FlaskView):
                 task=task,
                 logged_user=session
             )
-
 
 
 LogUserIn.register(app, route_base='/')
