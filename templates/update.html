@@ -7,6 +7,7 @@
 {% block body %}
 <div>
     <h1>Update Task</h1>
+    <center>
     <div class="form">
         <form action="/update/{{task.id}}" method="POST">
                 <select name="num_of_adult" id="num_of_adult">
@@ -25,5 +26,6 @@
                 <input type="submit" value="Update">
         </form>
     </div>
+        </center>
 </div>
 {% endblock %}
