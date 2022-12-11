@@ -1,23 +1,23 @@
 #!/usr/bin/env python3
 
 import json
-import os
+import random
+import string
+import time
 import uuid
 from datetime import datetime
 
-import LogMonitor
-import ValidateEntries
 from flask import Flask, render_template, request, url_for, redirect, session
-from flask_wtf import FlaskForm
-from wtforms import validators, SubmitField
-from wtforms.fields import DateField
 from flask_classful import FlaskView, route
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf import FlaskForm
 from passlib.hash import sha256_crypt
 from waitress import serve
-import string
-import random
-import time
+from wtforms import validators, SubmitField
+from wtforms.fields import DateField
+
+import LogMonitor
+import ValidateEntries
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hotel.db'
