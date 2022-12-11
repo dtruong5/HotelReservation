@@ -13,7 +13,13 @@
         {
             "username": "truongtiendat",
             "password": "$5$rounds=535000$1u2A3/s/Iatusa1v$omkXPD3dtOvkYQi1T2c9pde7a1tUIoiJOwwPO59DLl0",
-            "email": "dattruong120891@yahoo.com"
+            "email": "dattruong120891@yahoo.com",
+            "attempts": [
+                {
+                    "date": "2022-12-11",
+                    "time": "01:56:36"
+                }
+            ]
         }
     ]
 }

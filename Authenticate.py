@@ -256,27 +256,29 @@ class Gallery(FlaskView):
 
 class Receptionist(FlaskView):  # Bookings Tab
     default_methods = ["GET", "POST"]
-
     def bookings(self):
-        """gets content from bookings.json"""
-
-        with open('bookings.json', encoding="utf8") as file:
-            string = json.loads(file.read())
+        """gets content from Hotel database"""
+        tasks = Hotel.query.order_by(Hotel.check_out_date).all()
 
         if request.method == 'POST':
-            string['bookings'].append({
-                "name": request.form.get("name"),
-                "message": request.form.get("message"),
-                "date": datetime.now().strftime("%B %d, %Y - %H:%M")
-            })
-
-            json_object = json.dumps(string, indent=4)
-            with open("bookings.json", "w", encoding="utf8") as outfile:
-                outfile.write(json_object)
+            return redirect('/bookingConfirm')
 
         return render_template(
             'bookings.html',
-            bookings=string['bookings'],
+            tasks=tasks,
+            logged_user=session
+        )
+        return render_template(
+            'bookings.html',
+            tasks=tasks,
+            logged_user=session
+        )
+
+    def bookingConfirm(self):
+        tasks = Hotel.query.order_by(Hotel.check_out_date).all()
+        return render_template(
+            'bookingConfirm.html',
+            tasks=tasks,
             logged_user=session
         )
 
@@ -294,7 +296,7 @@ class Reservation(FlaskView):
                 db.session.add(new_task)
                 db.session.commit()
 
-                return redirect('/reservation')
+                return redirect('/bookings')
             except (RuntimeError, ValueError, NameError):
                 return 'There was an issue adding your task'
         else:
@@ -313,7 +315,7 @@ class Reservation(FlaskView):
         try:
             db.session.delete(task_to_delete)
             db.session.commit()
-            return redirect('/reservation')
+            return redirect('/bookings')
         except (RuntimeError, ValueError, NameError):
             return 'There was a problem deleting that task'
 
@@ -329,7 +331,7 @@ class Reservation(FlaskView):
             task.room = request.form.get('room')
             try:
                 db.session.commit()
-                return redirect('/reservation')
+                return redirect('/bookings')
             except (RuntimeError, ValueError, NameError):
                 return 'There was an issue updating your task'
         else:
@@ -354,5 +356,4 @@ with app.app_context():
     db.create_all()
 
 if __name__ == "__main__":
-    #app.run(debug = True)
     serve(app, host='0.0.0.0', port=PORT)

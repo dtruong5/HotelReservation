@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Reservation</title>
+{% endblock %}
+
+{% block body %}
+<div>
+    <h1>Reservation Date</h1>
+    <center>
+    <h5>List of Reservation</h5>
+    </center>
+    <table>
+        <tr>
+            <th>Number of Guests</th>
+            <th>Check in Date</th>
+            <th>Check out Date</th>
+            <th>Type of Room</th>
+            <th>Actions</th>
+        </tr>
+        {% for task in tasks %}
+            <tr>
+                <td>{{ task.num_of_adult }}</td>
+                <td>{{ task.check_in_date }}</td>
+                <td>{{ task.check_out_date }}</td>
+                <td>{{ task.room }}</td>
+                <td>
+                    <a href="/delete/{{task.id}}">Delete</a>
+                    <br>
+                    <a href="/update/{{task.id}}">Update</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+      <center>
+     <form method="POST" class = "form-control">
+        <div class="mb-2">
+            <h5>Booking confirmation:</h5>
+            <label for="name">name</label>
+            <input type="text" id="name" name="name" placeholder="johndoe1" required>
+
+            <label for="address">address</label>
+            <input type="address"  id="address" name="address" placeholder="123 Street Avenue" required>
+
+            <label for="zipcode">Zip code</label>
+            <input type="zipcode" id="zipcode" name="zipcode" placeholder="12345" required>
+
+            <label for="creditCard">Credit-card Number</label>
+            <input type="creditCard" id="creditCard" name="creditCard" placeholder="visa or master" required>
+
+            <label for="expirDate">Expiration date</label>
+            <input type="expirDate" id="expirDate" name="expirDate" placeholder="MM/YY" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Confirm Booking</button>
+    </form>
+        </center>
+{% endblock %}
